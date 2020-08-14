@@ -8,9 +8,11 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       department: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       company_id: {
+        allowNull: false,
         type: Sequelize.INTEGER,
       },
       createdAt: {

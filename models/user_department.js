@@ -14,8 +14,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   user_department.init({
-    user_id: DataTypes.INTEGER,
-    department_id: DataTypes.INTEGER,
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    department_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'user_department',
