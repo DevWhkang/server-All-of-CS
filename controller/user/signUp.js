@@ -1,29 +1,26 @@
 const { users } = require('../../models');
+const user = require('.');
 
 module.exports = {
-  post(req, res) {
+  async post(req, res) {
     const { email, password } = req.body;
 
-    users.findOne({
+    const [userData, created] = await users.findOrCreate({
       where: {
         email,
       },
+      defaults: {
+        username: '',
+        password,
+      },
     })
-      .then((userData) => {
-        if (userData) {
-          res.sendStatus(409);
-        } else {
-          users.create({
-            username: '',
-            email,
-            password,
-          })
-            .then((newUserData) => res.status(200).json({ id: newUserData.id }));
-        }
-      })
       .catch((err) => {
         res.status(500).send(err);
       });
-    // res.send('Response[POST]: signUp');
+    if (!created) {
+      return res.sendStatus(409);
+    }
+    const data = userData.get({ plain: true });
+    return res.status(200).json({ id: data.id });
   },
 };
