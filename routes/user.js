@@ -11,6 +11,7 @@ const {
 const router = express.Router();
 
 router.get('/', infoController.get);
+router.post('/', infoController.post);
 router.post('/sign-in', signInController.post);
 router.post('/sign-up', signUpController.post);
 router.get('/sign-out', signOutController.get);
