@@ -1,5 +1,5 @@
 const infoController = require('./info');
-const signInController = require('./singIn');
+const signInController = require('./signIn');
 const signUpController = require('./signUp');
 const signOutController = require('./signOut');
 
