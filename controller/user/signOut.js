@@ -1,6 +1,7 @@
 module.exports = {
   get(req, res) {
     if (req.session.userId) {
+      res.json(req.session.userId);
       req.session.destroy();
       res.redirect('/');
     } else {
