@@ -11,18 +11,19 @@ module.exports = {
     })
       .then((userData) => {
         if (userData) {
-          res.status(409);
+          res.sendStatus(409);
         } else {
           users.create({
+            username: '',
             email,
             password,
           })
-            .then((newUserData) => res.status(200).json(newUserData.id));
+            .then((newUserData) => res.status(200).json({ id: newUserData.id }));
         }
       })
       .catch((err) => {
         res.status(500).send(err);
       });
-    res.send('Response[POST]: signUp');
+    // res.send('Response[POST]: signUp');
   },
 };
