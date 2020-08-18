@@ -3,35 +3,34 @@ const {
 } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class departments extends Model {
+  class tag_company extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      departments.belongsToMany(models.users, {
-        foreignKey: 'department_id',
-        through: 'user_department',
-        as: 'users',
+      tag_company.belongsTo(models.tags, {
+        foreignKey: 'tag_id',
+        as: 'tags',
       });
-      departments.belongsTo(models.companies, {
+      tag_company.belongsTo(models.companies, {
         foreignKey: 'company_id',
         as: 'companies',
       });
-      departments.hasMany(models.CS_numbers, {
-        foreignKey: 'department_id',
-        as: 'CS_numbers',
-      });
-      departments.hasMany(models.services, {
-        foreignKey: 'department_id',
-        as: 'services',
-      });
     }
   }
-  departments.init({
-    department: {
-      type: DataTypes.STRING,
+  tag_company.init({
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER,
+    },
+    tag_id: {
+      type: DataTypes.INTEGER,
+      references: { model: 'tags', key: 'id' },
+      onDelete: 'CASCADE',
       allowNull: false,
     },
     company_id: {
@@ -42,7 +41,9 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     sequelize,
-    modelName: 'departments',
+    modelName: 'tag_company',
+    freezeTableName: true,
+    timestamps: false,
   });
-  return departments;
+  return tag_company;
 };

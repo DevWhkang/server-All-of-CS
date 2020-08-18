@@ -10,12 +10,21 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      services.belongsTo(models.departments, {
+        foreignKey: 'department_id',
+        as: 'departments',
+      });
     }
   }
   services.init({
     service: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    department_id: {
+      type: DataTypes.INTEGER,
+      references: { model: 'departments', key: 'id' },
+      onDelete: 'CASCADE',
       allowNull: false,
     },
   }, {
