@@ -28,19 +28,19 @@ Object.keys(db).forEach((modelName) => {
   }
 });
 
-Object.keys(db).forEach(async (model) => {
-  try {
-    await db[model].sync();
-    const [results] = await sequelize.query(`describe ${model}`);
-    const schema = results.map((r) => ({
-      Field: r.Field, Type: r.Type, Null: r.Null, Key: r.Key, Default: r.Default, Extra: r.Extra,
-    }));
-    console.log(model);
-    console.table(schema);
-  } catch (error) {
-    console.error(error);
-  }
-});
+// Object.keys(db).forEach(async (model) => {
+//   try {
+//     await db[model].sync();
+//     const [results] = await sequelize.query(`describe ${model}`);
+//     const schema = results.map((r) => ({
+//       Field: r.Field, Type: r.Type, Null: r.Null, Key: r.Key, Default: r.Default, Extra: r.Extra,
+//     }));
+//     console.log(model);
+//     console.table(schema);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
