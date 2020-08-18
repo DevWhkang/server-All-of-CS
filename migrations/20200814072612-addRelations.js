@@ -7,6 +7,12 @@ module.exports = {
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
     await queryInterface.createTable('user_tag', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+      },
       user_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
@@ -42,6 +48,12 @@ module.exports = {
     });
 
     await queryInterface.createTable('user_department', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+      },
       user_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
@@ -77,6 +89,12 @@ module.exports = {
     });
 
     await queryInterface.createTable('tag_company', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+      },
       tag_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
