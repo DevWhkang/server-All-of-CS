@@ -1,7 +1,6 @@
 const {
   Model,
 } = require('sequelize');
-const crypto = require('crypto');
 
 module.exports = (sequelize, DataTypes) => {
   class users extends Model {
@@ -39,11 +38,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'users',
-    hooks: {
-      afterValidate(data) {
-        data.password = crypto.createHash('sha1').update(data.password).digest('hex').slice(0, 10);
-      },
-    },
   });
   return users;
 };
