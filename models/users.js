@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'users',
     hooks: {
       afterValidate(data) {
-        data.password = crypto.createHash('sha1').update(data.password + data.email).digest('hex').slice(0, 10);
+        data.password = crypto.createHash('sha1').update(data.password).digest('hex').slice(0, 10);
       },
     },
   });
