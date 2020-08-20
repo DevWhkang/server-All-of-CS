@@ -1,9 +1,11 @@
 const { users } = require('../../models');
+const { hashFunction } = require('../../modules/utils');
 
 module.exports = {
   async post(req, res) {
     try {
-      const { email, password } = req.body;
+      const { email, password: pw } = req.body;
+      const password = hashFunction(pw, 10);
       const [userData, created] = await users.findOrCreate({
         where: { email },
         defaults: { username: '', password },
