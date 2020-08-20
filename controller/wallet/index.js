@@ -1,12 +1,14 @@
 const {
   users, departments, companies, user_department,
 } = require('../../models');
+const { verifyToken } = require('../../modules/jwt');
 
 module.exports = {
   async get(req, res) {
     try {
-      const { userId: id } = req.session;
-      if (!id) return res.sendStatus(404);
+      const { token } = req.cookies;
+      if (!token) return res.sendStatus(404);
+      const { id } = verifyToken(token);
       const user = await users.findOne({
         where: { id },
         attributes: [],
@@ -47,8 +49,9 @@ module.exports = {
 
   async getWithID(req, res) {
     try {
-      const { userId } = req.session;
-      if (!userId) return res.sendStatus(404);
+      const { token } = req.cookies;
+      if (!token) return res.sendStatus(404);
+      const { id: userId } = verifyToken(token);
       const { id } = req.params;
       const user = await users.findOne({
         where: { id: userId },
@@ -68,8 +71,9 @@ module.exports = {
 
   async post(req, res) {
     try {
-      const { userId = 1 } = req.session;
-      if (!userId) return res.sendStatus(404);
+      const { token } = req.cookies;
+      if (!token) return res.sendStatus(404);
+      const { id: userId } = verifyToken(token);
       const { id } = req.body;
       const [result, created] = await user_department.findOrCreate({
         where: { user_id: userId, department_id: id },
