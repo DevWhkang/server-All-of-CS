@@ -10,23 +10,19 @@ module.exports = {
       const user = await users.findOne({
         where: { id },
         attributes: [],
-        include: [
-          {
-            model: departments,
-            as: 'departments',
-            attributes: ['id', 'department'],
-            through: {
-              attributes: [],
-            },
-            include: [
-              {
-                model: companies,
-                as: 'companies',
-                attributes: ['id', 'company'],
-              },
-            ],
+        include: [{
+          model: departments,
+          as: 'departments',
+          attributes: ['id', 'department'],
+          through: {
+            attributes: [],
           },
-        ],
+          include: [{
+            model: companies,
+            as: 'companies',
+            attributes: ['id', 'company'],
+          }],
+        }],
       });
       const result = user.dataValues.departments.reduce((results, { dataValues }) => {
         const {
@@ -44,7 +40,8 @@ module.exports = {
       }, []);
       return res.json(result);
     } catch (error) {
-      return res.status(500).send(error);
+      console.error(error);
+      return res.sendStatus(500);
     }
   },
 
@@ -55,18 +52,17 @@ module.exports = {
       const { id } = req.params;
       const user = await users.findOne({
         where: { id: userId },
-        include: [
-          {
-            model: departments,
-            as: 'departments',
-            where: { id },
-            through: {},
-          },
-        ],
+        include: [{
+          model: departments,
+          as: 'departments',
+          where: { id },
+          through: {},
+        }],
       });
       return res.json({ include: !!user });
     } catch (error) {
-      return res.status(500).send(error);
+      console.error(error);
+      return res.sendStatus(500);
     }
   },
 
@@ -75,15 +71,24 @@ module.exports = {
       const { userId = 1 } = req.session;
       if (!userId) return res.sendStatus(404);
       const { id } = req.body;
-      const { dataTypes: { user_id, department_id } } = await user_department.findOrCreate({
-        where: {
-          user_id: userId,
-          department_id: id,
-        },
+      const [result, created] = await user_department.findOrCreate({
+        where: { user_id: userId, department_id: id },
       });
-      return res.json({ user_id, department_id });
+      if (!created) return res.sendStatus(409);
+      const { dataValues: department } = await departments.findOne({
+        where: { id: result.department_id },
+        include: [{
+          model: companies,
+          as: 'companies',
+        }],
+      });
+      return res.json({
+        company_id: department.company_id,
+        department_id: department.id,
+      });
     } catch (error) {
-      return res.status(500).send(error);
+      console.error(error);
+      return res.sendStatus(500);
     }
   },
 };
