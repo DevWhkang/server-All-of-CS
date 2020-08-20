@@ -6,7 +6,7 @@ module.exports = {
   async get(req, res) {
     try {
       const { id } = req.params;
-      const result = await departments.findAll({
+      const [result] = await departments.findAll({
         where: { id },
         attributes: ['id', 'department'],
         include: [{
