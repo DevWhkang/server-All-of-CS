@@ -5,15 +5,13 @@ module.exports = {
     try {
       const { email, password } = req.body;
       const user = await users.findOne({ where: { email, password } });
-      if (user) {
-        const { id } = user;
-        req.session.userId = id;
-        res.json({ id });
-      } else {
-        res.sendStatus(404);
-      }
+      if (!user) return res.sendStatus(404);
+      const { id } = user;
+      req.session.userId = id;
+      return res.json({ id });
     } catch (error) {
-      res.status(500).send(error);
+      console.error(error);
+      return res.status(500).send(error);
     }
   },
 };

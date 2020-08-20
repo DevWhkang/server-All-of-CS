@@ -1,12 +1,10 @@
 module.exports = {
   get(req, res) {
-    if (req.session.userId) {
-      res.json({ id: req.session.userId });
-      req.session.destroy();
-      res.redirect('/');
-    } else {
-      res.redirect('/');
-    }
-    res.send('Response[GET]: signOut');
+    const { userId: id } = req.session;
+    if (!id) return res.sendStatus(404);
+    return req.session.destroy((error) => {
+      error && console.error(error);
+      res.status(200).json({ id });
+    });
   },
 };
