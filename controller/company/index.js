@@ -4,7 +4,7 @@ module.exports = {
   async get(req, res) {
     try {
       const { id } = req.params;
-      const result = await companies.findAll({
+      const [result] = await companies.findAll({
         where: { id },
         attributes: ['company'],
         include: [{
