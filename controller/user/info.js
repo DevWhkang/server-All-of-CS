@@ -1,11 +1,13 @@
 const { users } = require('../../models');
 const { hashFunction } = require('../../modules/utils');
+const { verifyToken } = require('../../modules/jwt');
 
 module.exports = {
   async get(req, res) {
     try {
-      const { userId: id } = req.session;
-      if (!id) return res.sendStatus(404);
+      const { token } = req.cookies;
+      if (!token) return res.sendStatus(404);
+      const { id } = verifyToken(token);
       const user = await users.findOne({
         where: { id },
         attributes: ['id', 'username', 'email'],
@@ -19,14 +21,15 @@ module.exports = {
 
   async post(req, res) {
     try {
-      const { userId } = req.session;
-      if (!userId) return res.sendStatus(404);
-      const { id } = await users.findOne({ where: { id: userId } });
+      const { token } = req.cookies;
+      if (!token) return res.sendStatus(404);
+      const { id } = verifyToken(token);
+      const { id: userId } = await users.findOne({ where: { id } });
       if (({}).hasOwnProperty.call(req.body, 'password')) {
         req.body.password = hashFunction(req.body.password, 10);
       }
       await users.update(req.body, { where: { id: userId } });
-      return res.json({ id });
+      return res.json({ id: userId });
     } catch (error) {
       console.error(error);
       return res.sendStatus(500);

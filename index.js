@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const cors = require('cors');
 require('dotenv').config();
 
@@ -18,6 +19,7 @@ const url = `http://13.125.235.4:${port}`;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(cors());
 app.use(session({

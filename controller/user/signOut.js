@@ -1,10 +1,11 @@
+const { verifyToken } = require('../../modules/jwt');
+
 module.exports = {
   get(req, res) {
-    const { userId: id } = req.session;
-    if (!id) return res.sendStatus(404);
-    return req.session.destroy((error) => {
-      error && console.error(error);
-      res.status(200).json({ id });
-    });
+    const { token } = req.cookies;
+    if (!token) return res.sendStatus(404);
+    const { id } = verifyToken(token);
+    res.cookie('token', '');
+    return res.status(200).json({ id });
   },
 };
